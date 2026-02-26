@@ -1,15 +1,4 @@
 {
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "framework": "sveltekit",
-  "outputDirectory": ".svelte-kit",
-  "regions": ["iad1"],
-  "build": {
-    "env": {
-      "NODE_VERSION": "18"
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",
@@ -25,19 +14,6 @@
         {
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600, s-maxage=3600"
-        }
-      ]
-    },
-    {
-      "source": "/terminal",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
         }
       ]
     }
