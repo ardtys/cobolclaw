@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="glowStrong">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <pattern id="scanlines" patternUnits="userSpaceOnUse" width="512" height="4">
+      <rect width="512" height="2" fill="transparent"/>
+      <rect y="2" width="512" height="2" fill="rgba(0,0,0,0.12)"/>
+    </pattern>
+
+    <radialGradient id="vignette" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="transparent"/>
+      <stop offset="85%" stop-color="rgba(0,0,0,0.3)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.7)"/>
+    </radialGradient>
+
+    <radialGradient id="bgGrad" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#0F0F0F"/>
+      <stop offset="100%" stop-color="#050505"/>
+    </radialGradient>
+
+    <pattern id="grid" patternUnits="userSpaceOnUse" width="32" height="32">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#33FF33" stroke-width="0.3" opacity="0.08"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="48" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle grid -->
+  <rect width="512" height="512" rx="48" fill="url(#grid)"/>
+
+  <!-- Outer border frame -->
+  <rect x="16" y="16" width="480" height="480" rx="36" fill="none" stroke="#33FF33" stroke-width="1.5" opacity="0.25"/>
+  <rect x="24" y="24" width="464" height="464" rx="30" fill="none" stroke="#33FF33" stroke-width="0.5" opacity="0.15"/>
+
+  <!-- CLAW ICON — scaled up and centered -->
+  <g transform="translate(256, 280) scale(1.8)" filter="url(#glowStrong)">
+    <!-- Center arm -->
+    <rect x="-6" y="-70" width="12" height="40" rx="3" fill="#33FF33" opacity="0.9"/>
+    
+    <!-- Joint circle -->
+    <circle cx="0" cy="-30" r="10" fill="none" stroke="#33FF33" stroke-width="2.5" opacity="0.8"/>
+    <circle cx="0" cy="-30" r="4" fill="#33FF33" opacity="0.6"/>
+    
+    <!-- Left claw arm -->
+    <path d="M -8,-28 L -42,-4 L -50,16 L -38,20 L -28,0 L -6,-22" 
+          fill="none" stroke="#33FF33" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M -50,16 L -58,36 L -44,32 L -38,20" 
+          fill="#33FF33" opacity="0.85"/>
+    
+    <!-- Right claw arm -->
+    <path d="M 8,-28 L 42,-4 L 50,16 L 38,20 L 28,0 L 6,-22" 
+          fill="none" stroke="#33FF33" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 50,16 L 58,36 L 44,32 L 38,20" 
+          fill="#33FF33" opacity="0.85"/>
+
+    <!-- Center claw arm -->
+    <path d="M 0,-24 L 0,8 L -6,28 L 6,28 L 0,8" 
+          fill="#33FF33" opacity="0.7"/>
+    <path d="M -6,28 L -4,44 L 0,48 L 4,44 L 6,28" 
+          fill="#33FF33" opacity="0.85"/>
+
+    <!-- Grabbing energy lines -->
+    <line x1="-30" y1="42" x2="-18" y2="38" stroke="#33FF33" stroke-width="1" opacity="0.4"/>
+    <line x1="30" y1="42" x2="18" y2="38" stroke="#33FF33" stroke-width="1" opacity="0.4"/>
+    <line x1="-22" y1="50" x2="-12" y2="46" stroke="#33FF33" stroke-width="1" opacity="0.3"/>
+    <line x1="22" y1="50" x2="12" y2="46" stroke="#33FF33" stroke-width="1" opacity="0.3"/>
+  </g>
+
+  <!-- Cable/wire from top -->
+  <g filter="url(#glow)">
+    <line x1="256" y1="48" x2="256" y2="148" stroke="#33FF33" stroke-width="2.5" opacity="0.5" stroke-dasharray="5,5"/>
+  </g>
+
+  <!-- Corner brackets -->
+  <g stroke="#33FF33" stroke-width="1.5" opacity="0.3" fill="none">
+    <path d="M 40,70 L 40,40 L 70,40"/>
+    <path d="M 442,40 L 472,40 L 472,70"/>
+    <path d="M 40,442 L 40,472 L 70,472"/>
+    <path d="M 442,472 L 472,472 L 472,442"/>
+  </g>
+
+  <!-- Scanline overlay -->
+  <rect width="512" height="512" rx="48" fill="url(#scanlines)" opacity="0.6"/>
+  
+  <!-- Vignette overlay -->
+  <rect width="512" height="512" rx="48" fill="url(#vignette)"/>
+</svg>

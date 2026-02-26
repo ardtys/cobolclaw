@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(npx sv create . --template minimal --types ts --no-add-ons)",
+      "Bash(npm install)",
+      "Bash(npm run check:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout 5 tail:*)",
+      "Bash(npm install:*)",
+      "Bash(taskkill:*)",
+      "Bash(timeout:*)",
+      "Bash(ping:*)",
+      "Bash(npm run build:*)"
+    ]
+  }
+}

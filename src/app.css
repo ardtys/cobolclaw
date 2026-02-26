@@ -1,0 +1,341 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Custom Properties - Design Tokens */
+:root {
+	--crt-green: #33ff33;
+	--crt-green-dim: #1a8c1a;
+	--crt-green-glow: #33ff3366;
+	--crt-amber: #ffb000;
+	--crt-red: #ff3333;
+	--crt-cyan: #00ffff;
+	--bg-black: #0a0a0a;
+	--bg-dark: #111111;
+	--scanline: rgba(0, 0, 0, 0.15);
+}
+
+/* Global Base Styles */
+@layer base {
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+	}
+
+	html,
+	body {
+		width: 100%;
+		height: 100%;
+		overflow-x: hidden;
+	}
+
+	body {
+		font-family: 'IBM Plex Mono', 'Share Tech Mono', 'Courier New', monospace;
+		font-size: 12px;
+		line-height: 1.5;
+		background-color: var(--bg-black);
+		color: var(--crt-green);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	/* Phosphor Glow on all green text */
+	body {
+		text-shadow: 0 0 8px var(--crt-green-glow);
+	}
+
+	/* Selection styling */
+	::selection {
+		background-color: var(--crt-green);
+		color: var(--bg-black);
+		text-shadow: none;
+	}
+
+	::-moz-selection {
+		background-color: var(--crt-green);
+		color: var(--bg-black);
+		text-shadow: none;
+	}
+}
+
+/* CRT Screen Effects */
+@layer components {
+	/* Scanline overlay - Applied globally via body::after */
+	body::after {
+		content: '';
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: repeating-linear-gradient(
+			0deg,
+			transparent 0px,
+			transparent 2px,
+			var(--scanline) 2px,
+			var(--scanline) 3px
+		);
+		pointer-events: none;
+		z-index: 9999;
+		animation: screen-flicker 8s infinite;
+	}
+
+	/* Vignette effect */
+	body::before {
+		content: '';
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: radial-gradient(
+			ellipse at center,
+			transparent 0%,
+			transparent 60%,
+			rgba(0, 0, 0, 0.3) 100%
+		);
+		pointer-events: none;
+		z-index: 9998;
+	}
+
+	/* CRT Curvature (optional, applied to containers) */
+	.crt-curvature {
+		perspective: 1000px;
+		transform-style: preserve-3d;
+	}
+
+	.crt-curvature > * {
+		transform: translateZ(-50px) rotateY(0deg);
+	}
+
+	/* Blinking block cursor */
+	.cursor-block {
+		display: inline-block;
+		width: 0.6em;
+		height: 1em;
+		background-color: var(--crt-green);
+		animation: cursor-blink 530ms step-end infinite;
+		vertical-align: text-bottom;
+		margin-left: 2px;
+	}
+
+	/* Glitch effect for transitions */
+	.glitch-effect {
+		position: relative;
+		animation: glitch 200ms ease-out;
+	}
+
+	@keyframes glitch {
+		0% {
+			transform: translate(0);
+			filter: hue-rotate(0deg);
+		}
+		20% {
+			transform: translate(-2px, 2px);
+			filter: hue-rotate(90deg);
+		}
+		40% {
+			transform: translate(-2px, -2px);
+			filter: hue-rotate(180deg);
+		}
+		60% {
+			transform: translate(2px, 2px);
+			filter: hue-rotate(270deg);
+		}
+		80% {
+			transform: translate(2px, -2px);
+			filter: hue-rotate(360deg);
+		}
+		100% {
+			transform: translate(0);
+			filter: hue-rotate(0deg);
+		}
+	}
+
+	/* Terminal ASCII borders */
+	.terminal-border {
+		border: 1px solid var(--crt-green-dim);
+		box-shadow: 0 0 10px var(--crt-green-glow);
+	}
+
+	/* Progress bar characters */
+	.progress-bar {
+		font-family: monospace;
+		letter-spacing: 0;
+		white-space: nowrap;
+	}
+
+	/* Status indicators */
+	.status-hot {
+		color: var(--crt-amber);
+		text-shadow: 0 0 8px var(--crt-amber);
+	}
+
+	.status-warm {
+		color: var(--crt-green);
+	}
+
+	.status-cool {
+		color: var(--crt-green-dim);
+	}
+
+	.status-dead {
+		color: var(--crt-red);
+		text-shadow: 0 0 8px rgba(255, 51, 51, 0.4);
+	}
+
+	/* Risk indicators */
+	.risk-low {
+		color: var(--crt-green);
+	}
+
+	.risk-medium {
+		color: var(--crt-amber);
+		text-shadow: 0 0 8px rgba(255, 176, 0, 0.4);
+	}
+
+	.risk-high {
+		color: var(--crt-red);
+		text-shadow: 0 0 8px rgba(255, 51, 51, 0.4);
+	}
+
+	/* Flash animation for new data */
+	.flash-new {
+		animation: flash-green 500ms ease-out;
+	}
+
+	/* Amber text */
+	.text-amber {
+		color: var(--crt-amber);
+		text-shadow: 0 0 8px rgba(255, 176, 0, 0.4);
+	}
+
+	/* Red text */
+	.text-red {
+		color: var(--crt-red);
+		text-shadow: 0 0 8px rgba(255, 51, 51, 0.4);
+	}
+
+	/* Cyan text */
+	.text-cyan {
+		color: var(--crt-cyan);
+		text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+	}
+
+	/* Dim green text */
+	.text-dim {
+		color: var(--crt-green-dim);
+	}
+
+	/* Clickable elements */
+	.terminal-clickable {
+		cursor: pointer;
+		transition: all 0.1s ease;
+	}
+
+	.terminal-clickable:hover {
+		text-decoration: underline;
+		text-shadow: 0 0 12px var(--crt-green-glow);
+	}
+
+	/* Scrollbar styling */
+	::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: var(--bg-dark);
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: var(--crt-green-dim);
+		border: 1px solid var(--crt-green-dim);
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--crt-green);
+	}
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+	body {
+		font-size: 11px;
+	}
+
+	/* Reduce CRT effects on mobile for performance */
+	body::after {
+		background: repeating-linear-gradient(
+			0deg,
+			transparent 0px,
+			transparent 3px,
+			rgba(0, 0, 0, 0.1) 3px,
+			rgba(0, 0, 0, 0.1) 4px
+		);
+		animation: none; /* Disable flicker on mobile */
+	}
+
+	/* No curvature on mobile */
+	.crt-curvature {
+		perspective: none;
+	}
+
+	.crt-curvature > * {
+		transform: none;
+	}
+}
+
+/* Utility classes */
+@layer utilities {
+	.text-terminal {
+		font-size: 12px;
+	}
+
+	.text-terminal-cmd {
+		font-size: 14px;
+	}
+
+	.text-terminal-header {
+		font-size: 24px;
+	}
+
+	.font-display {
+		font-family: 'Share Tech Mono', 'IBM Plex Mono', monospace;
+	}
+
+	/* Prevent text selection during rapid interactions */
+	.no-select {
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+
+	/* Uppercase text */
+	.uppercase-forced {
+		text-transform: uppercase !important;
+	}
+}
+
+/* Theme variations */
+[data-theme='amber'] {
+	--crt-green: #ffb000;
+	--crt-green-dim: #996a00;
+	--crt-green-glow: #ffb00066;
+}
+
+[data-theme='cyan'] {
+	--crt-green: #00ffff;
+	--crt-green-dim: #008b8b;
+	--crt-green-glow: #00ffff66;
+}
+
+[data-theme='red'] {
+	--crt-green: #ff3333;
+	--crt-green-dim: #8b0000;
+	--crt-green-glow: #ff333366;
+}
