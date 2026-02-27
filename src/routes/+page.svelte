@@ -31,8 +31,8 @@
 		'> _'
 	];
 
-	// Placeholder contract address
-	const CONTRACT_ADDRESS = 'TBA_WILL_BE_UPDATED_SOON';
+	// Contract address
+	const CONTRACT_ADDRESS = '0x094AF20A9A7C3BeA445b53DC949A1eC602EBcba3';
 
 	// Initial boot sequence lines
 	const initialBootLines = [
@@ -331,28 +331,32 @@
 		<section id="ca" class="py-16 px-6 bg-black border-y-2 border-crt-green/50">
 			<div class="max-w-4xl mx-auto">
 				<div class="text-center mb-8">
-					<div class="inline-block px-4 py-1 border border-crt-amber/50 text-crt-amber text-xs mb-4 animate-pulse">
-						TOKEN LAUNCH PENDING
+					<div class="inline-block px-4 py-1 border border-crt-green/50 text-crt-green text-xs mb-4">
+						LIVE
 					</div>
 					<p class="text-crt-green/60">Official COBOLCLAW Token</p>
 				</div>
 
 				<!-- CA Display Box -->
-				<div class="border-2 border-crt-green/60 bg-black p-8 max-w-3xl mx-auto relative overflow-hidden">
+				<div class="border-2 border-crt-green/60 bg-black p-6 md:p-8 max-w-3xl mx-auto relative overflow-hidden">
 					<!-- Animated border glow -->
 					<div class="absolute inset-0 border-2 border-crt-green/20 animate-pulse"></div>
 
 					<div class="relative z-10">
-						<div class="text-center mb-6">
+						<div class="text-center mb-4">
 							<span class="text-xs text-crt-green/50 tracking-widest">CONTRACT ADDRESS (CA)</span>
 						</div>
 
-						<div class="flex items-center justify-center gap-4 flex-wrap">
-							<div class="font-mono text-lg md:text-2xl text-crt-green tracking-wider ca-placeholder">
-								<span class="animate-blink">[</span>
-								<span class="text-crt-amber">COMING SOON</span>
-								<span class="animate-blink">]</span>
+						<div class="flex flex-col items-center gap-4">
+							<div class="font-mono text-xs sm:text-sm md:text-base text-crt-green break-all text-center px-2 select-all">
+								{CONTRACT_ADDRESS}
 							</div>
+							<button
+								on:click={copyAddress}
+								class="px-6 py-2 border border-crt-green/40 hover:border-crt-green hover:bg-crt-green/10 transition-all text-sm font-bold"
+							>
+								{copied ? '✓ COPIED' : 'COPY CA'}
+							</button>
 						</div>
 					</div>
 				</div>
@@ -367,10 +371,6 @@
 						<span>FOLLOW ON X</span>
 					</a>
 				</div>
-
-				<p class="text-center text-crt-green/40 text-xs mt-6">
-					Join our community for launch announcements and updates
-				</p>
 			</div>
 		</section>
 
