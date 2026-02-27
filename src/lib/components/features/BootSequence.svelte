@@ -14,7 +14,7 @@
 	const bootLines = [
 		{ delay: 0, text: '██████████████████████████████████████████████' },
 		{ delay: 300, text: 'COBOLCLAW MAINFRAME SYSTEMS v1.0.0' },
-		{ delay: 200, text: '(C) 2025 COBOLCLAW LABORATORIES' },
+		{ delay: 200, text: '(C) 2026 COBOLCLAW LABORATORIES' },
 		{ delay: 300, text: '██████████████████████████████████████████████' },
 		{ delay: 400, text: '' },
 		{ delay: 300, text: 'PERFORMING SYSTEM DIAGNOSTICS...' },

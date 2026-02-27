@@ -47,7 +47,7 @@
 			<pre class="font-mono text-terminal">
 ════════════════════════════════════════════════════════════════
  COBOLCLAW MAINFRAME TERMINAL v1.0.0
- (C) 2025 COBOLCLAW LABORATORIES
+ (C) 2026 COBOLCLAW LABORATORIES
 ════════════════════════════════════════════════════════════════
 
  OLD CODE. FAST CLAWS.
