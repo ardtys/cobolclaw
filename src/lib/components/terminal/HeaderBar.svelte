@@ -55,7 +55,7 @@
 	<div class="flex items-center justify-between h-8 px-4 text-terminal text-crt-green">
 		<!-- Left: Logo & Version -->
 		<div class="flex items-center gap-2">
-			<img src="/logo.svg" alt="COBOLCLAW Logo" class="h-6 w-6 logo-glow" />
+			<img src="/logo.png" alt="COBOLCLAW Logo" class="h-6 w-6 logo-glow" />
 			<span class="font-display font-bold">COBOLCLAW v1.0</span>
 		</div>
 

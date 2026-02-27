@@ -56,7 +56,7 @@
 		<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 			<!-- Logo -->
 			<div class="flex items-center gap-3">
-				<img src="/favicon.svg" alt="COBOLCLAW" class="w-8 h-8 opacity-80" />
+				<img src="/logo.png" alt="COBOLCLAW" class="w-8 h-8 opacity-80" />
 				<span class="text-lg font-bold tracking-wider">COBOLCLAW</span>
 			</div>
 
