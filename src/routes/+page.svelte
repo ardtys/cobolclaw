@@ -31,8 +31,8 @@
 		'> _'
 	];
 
-	// Contract address (placeholder)
-	const CONTRACT_ADDRESS = 'TBA';
+	// Contract address
+	const CONTRACT_ADDRESS = 'AXtKZcHmMehtr2WtknMtkpT6sMpHQ9x9tnYNcPWDBAGS';
 
 	// Initial boot sequence lines
 	const initialBootLines = [
@@ -331,8 +331,8 @@
 		<section id="ca" class="py-16 px-6 bg-black border-y-2 border-crt-green/50">
 			<div class="max-w-4xl mx-auto">
 				<div class="text-center mb-8">
-					<div class="inline-block px-4 py-1 border border-crt-amber/50 text-crt-amber text-xs mb-4 animate-pulse">
-						TOKEN LAUNCH PENDING
+					<div class="inline-block px-4 py-1 border border-crt-green/50 text-crt-green text-xs mb-4">
+						LIVE
 					</div>
 					<p class="text-crt-green/60">Official COBOLCLAW Token</p>
 				</div>
@@ -347,12 +347,16 @@
 							<span class="text-xs text-crt-green/50 tracking-widest">CONTRACT ADDRESS (CA)</span>
 						</div>
 
-						<div class="flex items-center justify-center">
-							<div class="font-mono text-lg md:text-2xl text-crt-green tracking-wider">
-								<span class="animate-blink">[</span>
-								<span class="text-crt-amber">COMING SOON</span>
-								<span class="animate-blink">]</span>
+						<div class="flex flex-col items-center gap-4">
+							<div class="font-mono text-xs sm:text-sm md:text-base text-crt-green break-all text-center px-2 select-all">
+								{CONTRACT_ADDRESS}
 							</div>
+							<button
+								on:click={copyAddress}
+								class="px-6 py-2 border border-crt-green/40 hover:border-crt-green hover:bg-crt-green/10 transition-all text-sm font-bold"
+							>
+								{copied ? '✓ COPIED' : 'COPY CA'}
+							</button>
 						</div>
 					</div>
 				</div>
