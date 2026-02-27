@@ -10,6 +10,7 @@ import { browser } from '$app/environment';
 export interface PhantomProvider {
 	publicKey: PublicKey | null;
 	isConnected: boolean;
+	isPhantom?: boolean;
 	connect: (opts?: { onlyIfTrusted?: boolean }) => Promise<{ publicKey: PublicKey }>;
 	disconnect: () => Promise<void>;
 	signTransaction: (transaction: any) => Promise<any>;

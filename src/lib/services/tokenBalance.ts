@@ -2,8 +2,8 @@ import { Connection, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import {
 	getAssociatedTokenAddress,
 	getAccount,
-	Account as TokenAccount,
-	TOKEN_PROGRAM_ID
+	TOKEN_PROGRAM_ID,
+	type Account as TokenAccount
 } from '@solana/spl-token';
 import { connection } from './helius';
 import { phantomWallet } from './phantomWallet';
