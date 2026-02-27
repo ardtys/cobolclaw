@@ -327,41 +327,50 @@
 			</div>
 		</section>
 
-		<!-- Contract Address Section -->
-		<section class="py-12 px-6 bg-crt-green/5 border-y border-crt-green/30">
+		<!-- CA Section -->
+		<section id="ca" class="py-16 px-6 bg-black border-y-2 border-crt-green/50">
 			<div class="max-w-4xl mx-auto">
-				<div class="text-center mb-6">
-					<h3 class="text-sm font-bold text-crt-green/60 mb-2 tracking-wider">CONTRACT ADDRESS</h3>
-					<p class="text-xs text-crt-green/50 mb-4">Official COBOLCLAW Token (Coming Soon)</p>
+				<div class="text-center mb-8">
+					<div class="inline-block px-4 py-1 border border-crt-amber/50 text-crt-amber text-xs mb-4 animate-pulse">
+						TOKEN LAUNCH PENDING
+					</div>
+					<p class="text-crt-green/60">Official COBOLCLAW Token</p>
 				</div>
 
-				<div class="border border-crt-green/40 bg-black p-6 max-w-2xl mx-auto">
-					<div class="flex items-center justify-between gap-4">
-						<div class="font-mono text-sm md:text-base text-crt-green/80 break-all flex-1">
-							{CONTRACT_ADDRESS}
+				<!-- CA Display Box -->
+				<div class="border-2 border-crt-green/60 bg-black p-8 max-w-3xl mx-auto relative overflow-hidden">
+					<!-- Animated border glow -->
+					<div class="absolute inset-0 border-2 border-crt-green/20 animate-pulse"></div>
+
+					<div class="relative z-10">
+						<div class="text-center mb-6">
+							<span class="text-xs text-crt-green/50 tracking-widest">CONTRACT ADDRESS (CA)</span>
 						</div>
-						<button
-							on:click={copyAddress}
-							class="px-4 py-2 border border-crt-green/40 hover:bg-crt-green/10 transition-all flex-shrink-0 text-sm"
-							title="Copy address"
-						>
-							{copied ? '✓ COPIED' : 'COPY'}
-						</button>
-					</div>
-					<div class="mt-4 text-xs text-crt-green/50 text-center">
-						Contract address will be announced upon token launch. Stay tuned.
+
+						<div class="flex items-center justify-center gap-4 flex-wrap">
+							<div class="font-mono text-lg md:text-2xl text-crt-green tracking-wider ca-placeholder">
+								<span class="animate-blink">[</span>
+								<span class="text-crt-amber">COMING SOON</span>
+								<span class="animate-blink">]</span>
+							</div>
+						</div>
 					</div>
 				</div>
 
-				<div class="mt-6 flex justify-center gap-4">
+				<!-- Social Links -->
+				<div class="mt-8 flex justify-center">
 					<a
-						href="https://twitter.com/cobolclaw"
+						href="https://x.com/CobolClaw"
 						target="_blank"
-						class="text-xs text-crt-green/60 hover:text-crt-green underline"
+						class="flex items-center gap-2 px-6 py-3 border border-crt-green/30 hover:border-crt-green hover:bg-crt-green/5 transition-all text-sm"
 					>
-						Follow for updates
+						<span>FOLLOW ON X</span>
 					</a>
 				</div>
+
+				<p class="text-center text-crt-green/40 text-xs mt-6">
+					Join our community for launch announcements and updates
+				</p>
 			</div>
 		</section>
 
@@ -658,8 +667,7 @@ CONFIRM PURCHASE? (Y/N) <span class="animate-blink">█</span>
 					<div>
 						<div class="font-bold mb-3 text-crt-green/40">CONNECT</div>
 						<div class="space-y-2 text-crt-green/60">
-							<a href="https://twitter.com/cobolclaw" target="_blank" class="block hover:text-crt-green">Twitter</a>
-							<a href="https://discord.gg/cobolclaw" target="_blank" class="block hover:text-crt-green">Discord</a>
+							<a href="https://x.com/CobolClaw" target="_blank" class="block hover:text-crt-green">X (Twitter)</a>
 						</div>
 					</div>
 					<div>
