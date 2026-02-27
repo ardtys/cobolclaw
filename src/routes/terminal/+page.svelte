@@ -5,6 +5,7 @@
 	import TerminalOutput from '$lib/components/terminal/TerminalOutput.svelte';
 	import TerminalInput from '$lib/components/terminal/TerminalInput.svelte';
 	import { terminal } from '$lib/stores/terminal';
+	import { wallet } from '$lib/stores/wallet';
 	import { parseCommand } from '$lib/utils/commands/parser';
 	import { commandRegistry, commandExists } from '$lib/utils/commands/registry';
 	import { generateOutputId } from '$lib/utils/commands/parser';
@@ -77,9 +78,13 @@ SUGGESTION: PLEASE REPORT THIS BUG
 		sidebarVisible = !sidebarVisible;
 	}
 
-	onMount(() => {
-		// Add welcome message or boot flag check
-		// For now, the terminal will show the default welcome message
+	onMount(async () => {
+		// Try to auto-reconnect wallet if previously connected
+		try {
+			await wallet.tryAutoReconnect();
+		} catch (error) {
+			console.log('Auto-reconnect failed:', error);
+		}
 	});
 </script>
 

@@ -24,12 +24,12 @@ SUGGESTION: USE "DISCONNECT" TO DISCONNECT CURRENT WALLET
 	let output = `
 INITIATING WALLET HANDSHAKE...
 > SCANNING FOR WALLET PROVIDERS...
-> DETECTED: PHANTOM v24.1.0 (MOCK)
+> DETECTED: PHANTOM WALLET
 
-CONNECTING...
+CONNECTING... (PLEASE APPROVE IN PHANTOM POPUP)
 `;
 
-	// Attempt connection (mock)
+	// Attempt connection (REAL Phantom wallet)
 	const result = await wallet.connect();
 
 	if (result.success) {
@@ -37,17 +37,52 @@ CONNECTING...
 		output += `
 WALLET LINKED SUCCESSFULLY.
 ADDRESS: ${walletState.address}
-BALANCE: ${walletState.balance.toFixed(2)} COIN
+BALANCE: ${walletState.balance.toFixed(4)} SOL
 STATUS:  ██ CONNECTED
 
+⚠️  REAL WALLET CONNECTED - USE WITH CAUTION
 THE CLAW IS READY. TYPE "SCAN" TO BEGIN.
 `;
 	} else {
-		output = `
-ERROR: WALLET CONNECTION REJECTED.
-${result.error || 'UNKNOWN ERROR'}
+		// Handle specific error cases
+		if (result.error?.includes('not installed')) {
+			output = `
+ERROR CODE: E-2004
+DESCRIPTION: PHANTOM WALLET NOT FOUND
+
+Phantom wallet extension is not installed in your browser.
+
+INSTALLATION STEPS:
+1. Visit https://phantom.app/download
+2. Install the browser extension
+3. Create or import your wallet
+4. Return here and type "CONNECT"
+
+TYPE "CONNECT" AFTER INSTALLING PHANTOM.
+`;
+		} else if (result.error?.includes('rejected')) {
+			output = `
+ERROR CODE: E-2005
+DESCRIPTION: USER REJECTED CONNECTION
+
+You declined the connection request in Phantom.
+
 TYPE "CONNECT" TO TRY AGAIN.
 `;
+		} else {
+			output = `
+ERROR CODE: E-2006
+DESCRIPTION: WALLET CONNECTION FAILED
+DETAILS: ${result.error || 'UNKNOWN ERROR'}
+
+TROUBLESHOOTING:
+- Make sure Phantom is unlocked
+- Check browser permissions
+- Try refreshing the page
+
+TYPE "CONNECT" TO TRY AGAIN.
+`;
+		}
 	}
 
 	return {
@@ -59,7 +94,7 @@ TYPE "CONNECT" TO TRY AGAIN.
 	};
 };
 
-export const disconnectHandler: CommandHandler = (args, rawInput): CommandOutput => {
+export const disconnectHandler: CommandHandler = async (args, rawInput): Promise<CommandOutput> => {
 	// Check if wallet is connected
 	if (!get(isConnected)) {
 		return {
@@ -77,8 +112,8 @@ SUGGESTION: USE "CONNECT" TO CONNECT A WALLET FIRST
 
 	const address = get(wallet).address;
 
-	// Disconnect wallet
-	wallet.disconnect();
+	// Disconnect wallet (async for real Phantom disconnect)
+	await wallet.disconnect();
 
 	return {
 		id: generateOutputId(),

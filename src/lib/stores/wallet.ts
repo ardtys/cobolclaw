@@ -2,6 +2,7 @@ import { writable, derived } from 'svelte/store';
 import type { Wallet, WalletHolding } from '$lib/types/wallet';
 import type { Token } from '$lib/types/token';
 import { browser } from '$app/environment';
+import { phantomWallet } from '$lib/services/phantomWallet';
 
 const initialWallet: Wallet = {
 	connected: false,
@@ -13,29 +14,59 @@ const initialWallet: Wallet = {
 function createWalletStore() {
 	const { subscribe, set, update } = writable<Wallet>(initialWallet);
 
+	// Listen for Phantom events
+	if (browser) {
+		// Account changed event
+		window.addEventListener('phantom:accountChanged', async (event: any) => {
+			const publicKey = event.detail;
+			if (publicKey) {
+				const balance = await phantomWallet.getBalance(publicKey);
+				update((state) => ({
+					...state,
+					address: publicKey.toString(),
+					balance
+				}));
+			} else {
+				// Account disconnected
+				set(initialWallet);
+			}
+		});
+
+		// Disconnect event
+		window.addEventListener('phantom:disconnect', () => {
+			set(initialWallet);
+		});
+	}
+
 	return {
 		subscribe,
 
-		// Mock wallet connection
+		// Real Phantom wallet connection
 		connect: async (): Promise<{ success: boolean; address?: string; error?: string }> => {
-			// Simulate connection delay
-			await new Promise((resolve) => setTimeout(resolve, 1000));
+			try {
+				const result = await phantomWallet.connect();
 
-			// Mock wallet address
-			const mockAddress = `7xKp9f${Math.random().toString(36).substr(2, 6)}3fRmZq`;
-			const mockBalance = 12.45 + Math.random() * 10;
+				if (result.success && result.address) {
+					update((state) => ({
+						...state,
+						connected: true,
+						address: result.address!,
+						balance: result.balance || 0
+					}));
+				}
 
-			update((state) => ({
-				...state,
-				connected: true,
-				address: mockAddress,
-				balance: mockBalance
-			}));
-
-			return { success: true, address: mockAddress };
+				return result;
+			} catch (error: any) {
+				console.error('Wallet connection error:', error);
+				return {
+					success: false,
+					error: error.message || 'Failed to connect wallet'
+				};
+			}
 		},
 
-		disconnect: () => {
+		disconnect: async () => {
+			await phantomWallet.disconnect();
 			set(initialWallet);
 		},
 
@@ -44,6 +75,43 @@ function createWalletStore() {
 				...state,
 				balance
 			}));
+		},
+
+		// Refresh balance from blockchain
+		refreshBalance: async () => {
+			if (!phantomWallet.isConnected()) return;
+
+			const address = phantomWallet.getConnectedAddress();
+			if (!address) return;
+
+			try {
+				const { PublicKey } = await import('@solana/web3.js');
+				const publicKey = new PublicKey(address);
+				const balance = await phantomWallet.getBalance(publicKey);
+
+				update((state) => ({
+					...state,
+					balance
+				}));
+			} catch (error) {
+				console.error('Error refreshing balance:', error);
+			}
+		},
+
+		// Try to auto-reconnect on page load
+		tryAutoReconnect: async () => {
+			const result = await phantomWallet.tryAutoReconnect();
+
+			if (result.success && result.address) {
+				update((state) => ({
+					...state,
+					connected: true,
+					address: result.address!,
+					balance: result.balance || 0
+				}));
+			}
+
+			return result;
 		},
 
 		addHolding: (token: Token, amount: number, entryPrice: number) => {

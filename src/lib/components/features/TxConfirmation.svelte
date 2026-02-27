@@ -4,8 +4,9 @@
 	import { formatCurrency, formatCoin } from '$lib/utils/formatters';
 	import { settings } from '$lib/stores/settings';
 	import { wallet } from '$lib/stores/wallet';
-	import { generateMockTxHash } from '$lib/mock-data/wallet';
 	import { getBuyQuote, getSellQuote } from '$lib/services/jupiter';
+	import { executeBuy, executeSell, SAFETY_LIMITS } from '$lib/services/jupiterSwap';
+	import { getTokenBalance, refreshAllBalances } from '$lib/services/tokenBalance';
 	import ProgressBar from '$lib/components/ui/ProgressBar.svelte';
 
 	export let action: 'BUY' | 'SELL';
@@ -63,23 +64,70 @@
 
 		confirmed = true;
 		executing = true;
+		progress = 0;
 
-		// Simulate transaction execution
-		const totalTime = 2000 + Math.random() * 1000; // 2-3 seconds
-		const steps = 20;
-		const interval = totalTime / steps;
+		try {
+			console.log('🚨 EXECUTING REAL SWAP TRANSACTION');
 
-		for (let i = 0; i <= steps; i++) {
-			progress = (i / steps) * 100;
-			await new Promise((resolve) => setTimeout(resolve, interval));
+			// Prepare transaction
+			progress = 10;
+
+			let result;
+			const slippageBps = $settings.slippage * 100;
+
+			if (action === 'BUY') {
+				// Execute real BUY (SOL → Token)
+				progress = 20;
+				console.log(`Buying ${token.ticker} with ${amountSol} SOL`);
+
+				result = await executeBuy(token.address, amountSol, slippageBps);
+			} else {
+				// Execute real SELL (Token → SOL)
+				progress = 20;
+				console.log(`Selling ${amountSol} ${token.ticker} for SOL`);
+
+				result = await executeSell(token.address, amountSol, slippageBps);
+			}
+
+			if (!result.success) {
+				// Transaction failed
+				executing = false;
+				confirmed = false;
+				throw new Error(result.error || 'Transaction failed');
+			}
+
+			// Transaction sent
+			progress = 50;
+			txHash = result.signature || '';
+
+			// Wait for confirmation
+			progress = 75;
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+
+			// Refresh balances after successful swap
+			progress = 90;
+			await refreshAllBalances();
+			await wallet.refreshBalance();
+
+			// Complete
+			progress = 100;
+			executing = false;
+
+			console.log('✅ Transaction successful:', txHash);
+			onConfirm(txHash);
+		} catch (error: any) {
+			console.error('❌ Transaction failed:', error);
+
+			executing = false;
+			confirmed = false;
+			progress = 0;
+
+			// Show error to user
+			alert(`Transaction Failed:\n${error.message || 'Unknown error'}\n\nPlease try again.`);
+
+			// Call onCancel to close the confirmation
+			onCancel();
 		}
-
-		// Generate tx hash
-		txHash = generateMockTxHash();
-
-		// Complete
-		executing = false;
-		onConfirm(txHash);
 	}
 
 	function handleCancel() {
@@ -104,18 +152,30 @@
 			{:else}
 				<pre class="text-crt-green">
 ═══════════════════════════════════════
- TRANSACTION CONFIRMATION
+ 🚨 REAL TRANSACTION CONFIRMATION 🚨
 ═══════════════════════════════════════
+
+ ⚠️  WARNING: THIS WILL EXECUTE A REAL
+     BLOCKCHAIN TRANSACTION WITH REAL MONEY
 
  ACTION:      {action === 'BUY' ? 'BUY (CLAW)' : 'SELL (DUMP)'}
  TOKEN:       {token.ticker} ({token.name})
  AMOUNT:      {action === 'BUY' ? formatCoin(amountSol) : `${estimatedTokens.toLocaleString()} ${token.ticker}`}
- EST. {action === 'BUY' ? 'TOKENS' : 'COIN'}:  {action === 'BUY' ? `~${estimatedTokens.toLocaleString()} ${token.ticker}` : formatCoin(estimatedTokens * token.price)}
+ EST. {action === 'BUY' ? 'TOKENS' : 'SOL'}:  {action === 'BUY' ? `~${estimatedTokens.toLocaleString()} ${token.ticker}` : formatCoin(estimatedTokens * token.price)}
  PRICE IMPACT: {priceImpact.toFixed(2)}%{quoteError ? ' (ESTIMATED)' : ' (JUPITER)'}
  SLIPPAGE:    {$settings.slippage}%
- PRIORITY:    {$settings.priorityFee} ({typeof $settings.priorityFee === 'string' ? '0.0001 COIN' : formatCoin($settings.priorityFee)})
+ PRIORITY:    {$settings.priorityFee} ({typeof $settings.priorityFee === 'string' ? '0.0001 SOL' : formatCoin($settings.priorityFee)})
 
- CONFIRM? [Y/N]
+ 🔐 SAFETY LIMITS:
+ - MAX PER TRADE: {SAFETY_LIMITS.MAX_SOL_PER_TRADE} SOL
+ - MAX SLIPPAGE: {SAFETY_LIMITS.MAX_SLIPPAGE_BPS / 100}%
+ - MAX PRICE IMPACT: 10%
+
+ 📝 YOU WILL NEED TO:
+ 1. Approve in Phantom wallet popup
+ 2. Wait for blockchain confirmation
+
+ PROCEED WITH REAL TRANSACTION? [Y/N]
 				</pre>
 			{/if}
 
@@ -142,27 +202,53 @@
 		<!-- Execution Progress -->
 		<div class="execution-progress">
 			<pre class="text-crt-green">
-EXECUTING TRANSACTION...
+🚨 EXECUTING REAL BLOCKCHAIN TRANSACTION...
+
+{#if progress < 20}
+PREPARING TRANSACTION...
+{:else if progress < 50}
+WAITING FOR PHANTOM SIGNATURE...
+⏳ Please approve in your Phantom wallet
+{:else if progress < 75}
+BROADCASTING TO BLOCKCHAIN...
 TX: {txHash || 'PENDING...'}
+{:else if progress < 100}
+WAITING FOR CONFIRMATION...
+TX: {txHash}
+{:else}
+TRANSACTION CONFIRMED ✅
+TX: {txHash}
+{/if}
 			</pre>
 			<div class="mt-2">
 				<ProgressBar {progress} animated={true} />
 			</div>
+			<pre class="text-crt-amber mt-2">
+⚠️  DO NOT CLOSE THIS WINDOW
+    Transaction in progress...
+			</pre>
 		</div>
 	{:else}
 		<!-- Success -->
 		<div class="execution-success">
 			<pre class="text-crt-green">
-TRANSACTION CONFIRMED.
-TX: {txHash}
-{#if action === 'BUY'}
-RECEIVED: {estimatedTokens.toLocaleString()} {token.ticker}
-{:else}
-RECEIVED: {formatCoin(estimatedTokens * token.price)}
-{/if}
-FEE: 0.000005 COIN
+✅ REAL TRANSACTION CONFIRMED ✅
 
-TYPE "BAG" TO VIEW UPDATED PORTFOLIO.
+TX SIGNATURE: {txHash}
+
+{#if action === 'BUY'}
+BOUGHT: ~{estimatedTokens.toLocaleString()} {token.ticker}
+SPENT: {formatCoin(amountSol)}
+{:else}
+SOLD: {estimatedTokens.toLocaleString()} {token.ticker}
+RECEIVED: ~{formatCoin(estimatedTokens * token.price)}
+{/if}
+
+🔍 View on Solscan:
+   https://solscan.io/tx/{txHash}
+
+💼 TYPE "BAG" TO VIEW YOUR REAL PORTFOLIO
+   (May take a few seconds to update)
 			</pre>
 		</div>
 	{/if}
